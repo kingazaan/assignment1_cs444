@@ -28,6 +28,37 @@ class Perceptron:
             y_train: a numpy array of shape (N,) containing training labels
         """
         # TODO: implement me
+        # 1. Initialize weights vector w and bias term b
+        # 2. For each x, compute activation which is basicaly  z = w*x + b
+        # 3. Prediction with applying step function
+            # If z >= 0, y_pred = 1; else y_pred = -1
+        # 4. Compare y_pred and y to get loss
+        # 5. Update bias and weights
+            # w = w + lr * dotproduct((y - y_pred), x) 
+            # b = b + lr * y
+
+        # 1. Initialize the weights vector w with zeros or random small values.
+        # 2. For each epoch from 1 to total_epochs:
+        #     a. For each training example:
+        #         i. Compute the activation value
+                    # z = dot_product(w, x_i).
+        #         ii. Compute the predicted class label y_pred using the activation value.
+        #         iii. If y_pred is not equal to y_i (misclassification):
+        #             A. Update the weights vector w using the perceptron update rule:
+        #                 w = w + learning_rate * (y_i - y_pred) * x_i
+        # 3. Return the trained weights vector w.
+        N, D = X_train.shape
+        # self.w = np.random.randn(D, self.n_class)
+        self.w = np.zeros(D)
+        
+        for i in range(self.epochs):
+            z = np.dot(X_train, self.w)
+            y_pred = np.array([1 if val >= 0 else -1 for val in z])
+            # print('y pred', y_pred)
+            # print('y train', y_train)
+            if np.any(y_pred != y_train):
+                self.w = self.w - self.lr * np.dot((y_train - y_pred), X_train)
+
         pass
 
     def predict(self, X_test: np.ndarray) -> np.ndarray:
@@ -43,4 +74,12 @@ class Perceptron:
                 class.
         """
         # TODO: implement me
-        return
+        N, D = X_test.shape
+        y_pred = np.zeros(N)
+
+        # we can now use the ideal updated weights and biases
+        # it's like training but no updating weights, same code
+        z = np.dot(X_test, self.w)
+        y_pred = np.array([1 if val >= 0 else -1 for val in z])
+                
+        return y_pred
